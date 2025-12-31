@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* --- ENTRANCE ANIMATION (Fade Up) --- */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-enter {
+    animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+}
+
+.delay-100 { animation-delay: 0.2s; }
+.delay-200 { animation-delay: 0.4s; }
+.delay-300 { animation-delay: 0.6s; }
+
+/* --- PRELOADER STYLES --- */
+#preloader {
+    position: fixed; inset: 0; background-color: #fdfbf7; z-index: 9999;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    transition: opacity 1s ease-out, visibility 1s ease-out;
+}
+.pulse-text {
+    font-family: 'Times New Roman', serif; letter-spacing: 0.3em;
+    text-transform: uppercase; color: #2c3e50; animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+.loaded { opacity: 0; visibility: hidden; pointer-events: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* --- EDITORIAL TYPOGRAPHY --- */
+.drop-cap::first-letter {
+    float: left;
+    font-family: 'Cinzel', serif; /* Uses your serif font */
+    font-size: 3.5rem;
+    line-height: 0.85;
+    margin-right: 0.5rem;
+    margin-top: 0.2rem;
+    color: #2c3e50;
+}
+
+/* --- CUSTOM SCROLLBAR FOR STORY SECTION --- */
+
+/* Light Mode Scrollbar (For White Paper) */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #e5e7eb;
+    border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #2c3e50;
+    border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #1e293b;
+}
+
+/* Dark Mode Scrollbar (For Proposal Card) */
+.custom-scrollbar-dark::-webkit-scrollbar {
+    width: 4px;
+}
+.custom-scrollbar-dark::-webkit-scrollbar-track {
+    background: #374151;
+    border-radius: 4px;
+}
+.custom-scrollbar-dark::-webkit-scrollbar-thumb {
+    background: #c5a059;
+    border-radius: 4px;
+}
