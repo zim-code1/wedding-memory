@@ -276,13 +276,23 @@ if (btnGroom && btnBride && fileGroom && fileBride) {
     });
 }
 
-// --- 6. OPTIMIZED ENTOURAGE LOGIC ---
+// --- 6. FINAL ENTOURAGE LOGIC (Bug Free) ---
 window.openEnvelope = () => {
     const flap = document.getElementById('envelope-flap');
     const seal = document.getElementById('wax-seal');
     const label = document.getElementById('envelope-label');
     const letter = document.getElementById('opened-letter');
-    
+    const footerContent = document.getElementById('footer-content'); 
+
+    // 1. Lock Main Scroll (This is key!)
+    document.body.style.overflow = 'hidden';
+
+    // 2. Hide Footer Text (Just in case)
+    if(footerContent) {
+        footerContent.classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    // 3. Animation
     seal.style.opacity = '0';
     seal.style.transform = 'translate(-50%, -50px) scale(1.5)';
     label.style.opacity = '0';
@@ -304,6 +314,7 @@ window.closeEnvelope = () => {
     const flap = document.getElementById('envelope-flap');
     const seal = document.getElementById('wax-seal');
     const label = document.getElementById('envelope-label');
+    const footerContent = document.getElementById('footer-content');
 
     letter.classList.remove('opacity-100');
     letter.classList.add('opacity-0');
@@ -311,6 +322,10 @@ window.closeEnvelope = () => {
     setTimeout(() => {
         letter.classList.add('hidden');
         
+        // 1. Unlock Scroll
+        document.body.style.overflow = '';
+
+        // 2. Reset Envelope
         flap.style.transform = 'rotateX(0deg)';
         flap.style.zIndex = '30';
 
@@ -318,22 +333,67 @@ window.closeEnvelope = () => {
             label.style.opacity = '1';
             seal.style.opacity = '1';
             seal.style.transform = ''; 
+            
+            // 3. Show Footer Text
+            if(footerContent) {
+                footerContent.classList.remove('opacity-0', 'pointer-events-none');
+            }
         }, 300);
 
-    }, 300); 
+    }, 300);
 };
+
+// ... (Keep the rest of your main.js, including flipPage, the same)
+
+// --- 7. ENVELOPE PARALLAX EFFECT ---
+const envelopeWrapper = document.getElementById('envelope-wrapper');
+const entourageSection = document.getElementById('entourage');
+
+if (envelopeWrapper && entourageSection) {
+    window.addEventListener('scroll', () => {
+        const sectionTop = entourageSection.offsetTop;
+        const scrollY = window.scrollY;
+        const windowHeight = window.innerHeight;
+        const sectionHeight = entourageSection.offsetHeight;
+
+        // Only apply effect when the section is visible in the viewport
+        if (scrollY + windowHeight > sectionTop && scrollY < sectionTop + sectionHeight) {
+            const speed = 0.08; // Adjust this value to change the intensity of the effect
+            
+            // Calculate offset based on scroll position relative to the section's center
+            const sectionCenter = sectionTop + sectionHeight / 2;
+            const scrollCenter = scrollY + windowHeight / 2;
+            const offset = (scrollCenter - sectionCenter) * speed;
+
+            envelopeWrapper.style.transform = `translateY(${offset}px)`;
+        }
+    });
+}
 
 window.flipPage = (toPage) => {
     const p1 = document.getElementById('page-1');
     const p2 = document.getElementById('page-2');
     const contentContainer = document.getElementById('letter-content');
 
-    contentContainer.scrollTop = 0;
+    if (contentContainer) {
+        contentContainer.scrollTop = 0;
+    }
+
     if (toPage === 2) {
+        // Hide Page 1
+        p1.classList.remove('block');
         p1.classList.add('hidden');
+        
+        // Show Page 2
         p2.classList.remove('hidden');
+        p2.classList.add('block');
     } else {
+        // Hide Page 2
+        p2.classList.remove('block');
         p2.classList.add('hidden');
+        
+        // Show Page 1
         p1.classList.remove('hidden');
+        p1.classList.add('block');
     }
 };
