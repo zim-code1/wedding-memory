@@ -276,7 +276,7 @@ if (btnGroom && btnBride && fileGroom && fileBride) {
     });
 }
 
-// --- 6. FINAL ENTOURAGE LOGIC (Bug Free) ---
+// --- 6. FINAL ENTOURAGE LOGIC  ---
 window.openEnvelope = () => {
     const flap = document.getElementById('envelope-flap');
     const seal = document.getElementById('wax-seal');
@@ -284,15 +284,12 @@ window.openEnvelope = () => {
     const letter = document.getElementById('opened-letter');
     const footerContent = document.getElementById('footer-content'); 
 
-    // 1. Lock Main Scroll (This is key!)
     document.body.style.overflow = 'hidden';
 
-    // 2. Hide Footer Text (Just in case)
     if(footerContent) {
         footerContent.classList.add('opacity-0', 'pointer-events-none');
     }
 
-    // 3. Animation
     seal.style.opacity = '0';
     seal.style.transform = 'translate(-50%, -50px) scale(1.5)';
     label.style.opacity = '0';
@@ -321,11 +318,7 @@ window.closeEnvelope = () => {
     
     setTimeout(() => {
         letter.classList.add('hidden');
-        
-        // 1. Unlock Scroll
         document.body.style.overflow = '';
-
-        // 2. Reset Envelope
         flap.style.transform = 'rotateX(0deg)';
         flap.style.zIndex = '30';
 
@@ -334,7 +327,6 @@ window.closeEnvelope = () => {
             seal.style.opacity = '1';
             seal.style.transform = ''; 
             
-            // 3. Show Footer Text
             if(footerContent) {
                 footerContent.classList.remove('opacity-0', 'pointer-events-none');
             }
@@ -342,8 +334,6 @@ window.closeEnvelope = () => {
 
     }, 300);
 };
-
-// ... (Keep the rest of your main.js, including flipPage, the same)
 
 // --- 7. ENVELOPE PARALLAX EFFECT ---
 const envelopeWrapper = document.getElementById('envelope-wrapper');
@@ -380,19 +370,13 @@ window.flipPage = (toPage) => {
     }
 
     if (toPage === 2) {
-        // Hide Page 1
         p1.classList.remove('block');
         p1.classList.add('hidden');
-        
-        // Show Page 2
         p2.classList.remove('hidden');
         p2.classList.add('block');
     } else {
-        // Hide Page 2
         p2.classList.remove('block');
         p2.classList.add('hidden');
-        
-        // Show Page 1
         p1.classList.remove('hidden');
         p1.classList.add('block');
     }
