@@ -50,8 +50,13 @@ html {
 /* --- CUSTOM SCROLLBAR FOR STORY SECTION --- */
 
 /* Light Mode Scrollbar (For White Paper) */
+.custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #2c3e50 #e5e7eb;
+    overflow-y: auto;
+}
 .custom-scrollbar::-webkit-scrollbar {
-    width: 4px;
+    width: 6px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
     background: #e5e7eb;
@@ -66,8 +71,13 @@ html {
 }
 
 /* Dark Mode Scrollbar (For Proposal Card) */
+.custom-scrollbar-dark {
+    scrollbar-width: thin;
+    scrollbar-color: #c5a059 #374151;
+    overflow-y: auto;
+}
 .custom-scrollbar-dark::-webkit-scrollbar {
-    width: 4px;
+    width: 6px;
 }
 .custom-scrollbar-dark::-webkit-scrollbar-track {
     background: #374151;
@@ -77,20 +87,38 @@ html {
     background: #c5a059;
     border-radius: 4px;
 }
-
-/* --- INVISIBLE SCROLLBAR UTILITY --- */
-.custom-scrollbar {
-    /* 1. Firefox */
-    scrollbar-width: none;
-    
-    /* 2. IE and Edge */
-    -ms-overflow-style: none;
-    
-    /* 3. Keep scrolling enabled */
-    overflow-y: auto; 
+.custom-scrollbar-dark::-webkit-scrollbar-thumb:hover {
+    background: #b38e4b;
 }
 
-/* 4. Chrome, Safari, and Opera */
-.custom-scrollbar::-webkit-scrollbar {
-    display: none;
+/* --- THEMATIC HOVER EFFECTS & ANIMATIONS --- */
+
+/* Wax seal glow pulse */
+@keyframes sealPulse {
+    0% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.5); }
+    70% { box-shadow: 0 0 0 10px rgba(197, 160, 89, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0); }
+}
+
+.group:hover #wax-seal .rounded-full {
+    animation: sealPulse 1.5s infinite;
+}
+
+/* Timeline Cards Interactive Inspection */
+.group:hover .relative.w-full.max-w-xs {
+    transform: rotate(0deg) translateY(-8px) scale(1.03);
+    box-shadow: 0 25px 50px -12px rgba(197, 160, 89, 0.2);
+}
+
+/* --- MODAL CONTAINER STYLES --- */
+.modal-container {
+    padding-top: 3rem; /* Ensures the content clears the top border and close button on mobile */
+    padding-bottom: 2rem; /* Ensures the content clears the bottom border on mobile */
+}
+
+@media (min-width: 768px) {
+    .modal-container {
+        padding-top: 4rem; /* Ensures the content clears the top border and close button on desktop */
+        padding-bottom: 3rem; /* Ensures the content clears the bottom border on desktop */
+    }
 }

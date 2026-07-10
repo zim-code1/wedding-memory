@@ -44,15 +44,19 @@ let isDragging = false;
 let startX;
 let scrollLeft;
 let animationId;
-const baseSpeed = 0.5; 
+const baseSpeed = 30; // speed in pixels per second
+let lastTime = null;
 
-const scrollLoop = () => {
+const scrollLoop = (timestamp) => {
     if (!container) return;
+    if (!lastTime) lastTime = timestamp;
+    const deltaTime = Math.min((timestamp - lastTime) / 1000, 0.1); // cap to 100ms to prevent giant jumps when tab is inactive
+    lastTime = timestamp;
 
     const singleSetWidth = track.scrollWidth / 3;
     
     if (!isHovered && !isDragging) {
-        container.scrollLeft += baseSpeed;
+        container.scrollLeft += baseSpeed * deltaTime;
     }
 
     if (container.scrollLeft >= singleSetWidth * 2) {
@@ -69,7 +73,10 @@ if (container && track) {
     cancelAnimationFrame(animationId);
     setTimeout(() => {
         container.scrollLeft = track.scrollWidth / 3;
-        scrollLoop();
+        animationId = requestAnimationFrame((timestamp) => {
+            lastTime = timestamp;
+            scrollLoop(timestamp);
+        });
     }, 100);
 }
 
@@ -176,6 +183,12 @@ if (track && lightbox) {
     lightbox.addEventListener('click', (e) => {
         if (e.target === lightbox) closeLightbox();
     });
+
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
+            closeLightbox();
+        }
+    });
 }
 
 // --- MUSIC AUTO-PLAY ENGINE (UPDATED) ---
@@ -192,10 +205,14 @@ if (musicBtn && bgMusic) {
             playIcon.classList.add('hidden');   
             pauseIcon.classList.remove('hidden'); 
             musicBtn.classList.add('bg-white/20', 'border-white', 'animate-pulse');
+            musicBtn.setAttribute('aria-pressed', 'true');
+            musicBtn.setAttribute('aria-label', 'Pause background music');
         } else {
             playIcon.classList.remove('hidden'); 
             pauseIcon.classList.add('hidden');   
             musicBtn.classList.remove('bg-white/20', 'border-white', 'animate-pulse');
+            musicBtn.setAttribute('aria-pressed', 'false');
+            musicBtn.setAttribute('aria-label', 'Play background music');
         }
     };
 
@@ -223,6 +240,7 @@ if (musicBtn && bgMusic) {
                     // Clean up listeners
                     document.removeEventListener('click', attemptAutoPlay);
                     document.removeEventListener('scroll', attemptAutoPlay);
+                    document.removeEventListener('touchstart', attemptAutoPlay);
                 })
                 .catch(error => {
                     // Blocked by browser. Wait for user interaction.
@@ -238,12 +256,18 @@ if (musicBtn && bgMusic) {
     // Try again on first interaction
     document.addEventListener('click', attemptAutoPlay, { once: true });
     document.addEventListener('scroll', attemptAutoPlay, { once: true });
+    document.addEventListener('touchstart', attemptAutoPlay, { once: true });
 }
 
 // Preloader
 window.addEventListener('load', () => {
     const preloader = document.getElementById('preloader');
-    if (preloader) preloader.classList.add('loaded');
+    if (preloader) {
+        preloader.classList.add('loaded');
+        preloader.addEventListener('transitionend', () => {
+            preloader.remove();
+        });
+    }
 });
 
 // Dossier Switcher
@@ -258,10 +282,14 @@ if (btnGroom && btnBride && fileGroom && fileBride) {
         btnGroom.classList.remove('border-transparent', 'text-gray-400');
         btnBride.classList.add('border-transparent', 'text-gray-400');
         btnBride.classList.remove('border-white', 'text-white');
-        fileGroom.classList.remove('opacity-0', 'translate-x-[-20px]', 'absolute', 'pointer-events-none');
-        fileGroom.classList.add('opacity-100', 'translate-x-0', 'relative', 'z-20');
-        fileBride.classList.remove('opacity-100', 'translate-x-0', 'relative', 'z-20');
-        fileBride.classList.add('opacity-0', 'translate-x-10', 'absolute', 'pointer-events-none');
+        
+        btnGroom.setAttribute('aria-selected', 'true');
+        btnBride.setAttribute('aria-selected', 'false');
+
+        fileGroom.classList.remove('opacity-0', 'translate-x-[-20px]', 'pointer-events-none');
+        fileGroom.classList.add('opacity-100', 'translate-x-0', 'z-20');
+        fileBride.classList.remove('opacity-100', 'translate-x-0', 'z-20');
+        fileBride.classList.add('opacity-0', 'translate-x-10', 'pointer-events-none', 'z-10');
     });
 
     btnBride.addEventListener('click', () => {
@@ -269,10 +297,14 @@ if (btnGroom && btnBride && fileGroom && fileBride) {
         btnBride.classList.remove('border-transparent', 'text-gray-400');
         btnGroom.classList.add('border-transparent', 'text-gray-400');
         btnGroom.classList.remove('border-white', 'text-white');
-        fileBride.classList.remove('opacity-0', 'translate-x-10', 'absolute', 'pointer-events-none');
-        fileBride.classList.add('opacity-100', 'translate-x-0', 'relative', 'z-20');
-        fileGroom.classList.remove('opacity-100', 'translate-x-0', 'relative', 'z-20');
-        fileGroom.classList.add('opacity-0', 'translate-x-[-20px]', 'absolute', 'pointer-events-none');
+        
+        btnBride.setAttribute('aria-selected', 'true');
+        btnGroom.setAttribute('aria-selected', 'false');
+
+        fileBride.classList.remove('opacity-0', 'translate-x-10', 'pointer-events-none');
+        fileBride.classList.add('opacity-100', 'translate-x-0', 'z-20');
+        fileGroom.classList.remove('opacity-100', 'translate-x-0', 'z-20');
+        fileGroom.classList.add('opacity-0', 'translate-x-[-20px]', 'pointer-events-none', 'z-10');
     });
 }
 
@@ -283,8 +315,13 @@ window.openEnvelope = () => {
     const label = document.getElementById('envelope-label');
     const letter = document.getElementById('opened-letter');
     const footerContent = document.getElementById('footer-content'); 
+    const navbar = document.getElementById('navbar');
 
     document.body.style.overflow = 'hidden';
+
+    if (navbar) {
+        navbar.classList.add('opacity-0', 'pointer-events-none');
+    }
 
     if(footerContent) {
         footerContent.classList.add('opacity-0', 'pointer-events-none');
@@ -312,6 +349,7 @@ window.closeEnvelope = () => {
     const seal = document.getElementById('wax-seal');
     const label = document.getElementById('envelope-label');
     const footerContent = document.getElementById('footer-content');
+    const navbar = document.getElementById('navbar');
 
     letter.classList.remove('opacity-100');
     letter.classList.add('opacity-0');
@@ -327,6 +365,10 @@ window.closeEnvelope = () => {
             seal.style.opacity = '1';
             seal.style.transform = ''; 
             
+            if (navbar) {
+                navbar.classList.remove('opacity-0', 'pointer-events-none');
+            }
+            
             if(footerContent) {
                 footerContent.classList.remove('opacity-0', 'pointer-events-none');
             }
@@ -334,6 +376,17 @@ window.closeEnvelope = () => {
 
     }, 300);
 };
+
+// Keyboard handler to open entourage envelope
+const envelopeContainer = document.getElementById('envelope-container');
+if (envelopeContainer) {
+    envelopeContainer.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            window.openEnvelope();
+        }
+    });
+}
 
 // --- 7. ENVELOPE PARALLAX EFFECT ---
 const envelopeWrapper = document.getElementById('envelope-wrapper');

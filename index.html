@@ -52,9 +52,9 @@
 
         <ul class="hidden md:flex gap-10 font-sans text-xs uppercase tracking-[0.2em] font-light">
             <li><a href="#gallery" class="hover:text-[#c5a059] transition-colors">Moments</a></li>
-            <li><a href="#couple" class="hover:text-[#c5a059] transition-colors">Profiles</a></li>
-            <li><a href="#story" class="hover:text-[#c5a059] transition-colors">Story</a></li>
-            <li><a href="#entourage" class="hover:text-[#c5a059] transition-colors">People</a></li>
+            <li><a href="#couple" class="hover:text-[#c5a059] transition-colors">Personnel Files</a></li>
+            <li><a href="#story" class="hover:text-[#c5a059] transition-colors">Case History</a></li>
+            <li><a href="#entourage" class="hover:text-[#c5a059] transition-colors">Key Persons</a></li>
         </ul>
 
         <div id="mobile-menu-btn" class="md:hidden text-2xl cursor-pointer hover:text-[#c5a059] transition-colors z-50 relative">
@@ -114,7 +114,7 @@
             </p>
 
             <div class="mt-8 opacity-0 animate-enter delay-300">
-                <button id="music-btn" class="group border border-white/50 w-12 h-12 rounded-full flex items-center justify-center mx-auto hover:bg-white/20 hover:scale-110 transition-all duration-300">
+                <button id="music-btn" aria-label="Play background music" aria-pressed="false" class="group border border-white/50 w-12 h-12 rounded-full flex items-center justify-center mx-auto hover:bg-white/20 hover:scale-110 transition-all duration-300">
                     <svg id="play-icon" class="w-5 h-5 fill-white pl-1 group-hover:fill-gray-200 transition-colors" viewBox="0 0 24 24">
                         <path d="M8 5v14l11-7z"/> 
                     </svg>
@@ -172,18 +172,18 @@
                 <h2 class="font-serif text-2xl md:text-5xl uppercase tracking-widest text-white">Personnel Files</h2>
             </div>
 
-            <div class="flex justify-center gap-4 mb-8 opacity-0 animate-enter delay-200">
-                <button id="btn-groom" class="px-4 py-2 md:px-6 md:py-3 font-serif text-xs md:text-sm uppercase tracking-widest border-b-2 border-white text-white transition-all hover:bg-white/10">
+            <div role="tablist" aria-label="Personnel Files" class="flex justify-center gap-4 mb-8 opacity-0 animate-enter delay-200">
+                <button id="btn-groom" role="tab" aria-selected="true" aria-controls="file-groom" class="px-4 py-2 md:px-6 md:py-3 font-serif text-xs md:text-sm uppercase tracking-widest border-b-2 border-white text-white transition-all hover:bg-white/10">
                     File 001: Groom
                 </button>
-                <button id="btn-bride" class="px-4 py-2 md:px-6 md:py-3 font-serif text-xs md:text-sm uppercase tracking-widest border-b-2 border-transparent text-gray-400 transition-all hover:text-white hover:bg-white/10">
+                <button id="btn-bride" role="tab" aria-selected="false" aria-controls="file-bride" class="px-4 py-2 md:px-6 md:py-3 font-serif text-xs md:text-sm uppercase tracking-widest border-b-2 border-transparent text-gray-400 transition-all hover:text-white hover:bg-white/10">
                     File 002: Bride
                 </button>
             </div>
 
-            <div class="relative w-full opacity-0 animate-enter delay-300 min-h-[800px]"> 
+            <div class="grid grid-cols-1 grid-rows-1 w-full opacity-0 animate-enter delay-300"> 
 
-                <div id="file-groom" class="transition-all duration-500 ease-in-out transform opacity-100 translate-x-0 relative z-20">
+                <div id="file-groom" role="tabpanel" aria-labelledby="btn-groom" class="col-start-1 row-start-1 transition-all duration-500 ease-in-out transform opacity-100 translate-x-0 z-20">
                     <div class="relative group">
                         <div class="absolute inset-0 bg-gray-500/20 transform translate-x-1 translate-y-1 md:translate-x-2 md:translate-y-2 rotate-1 rounded-sm z-0"></div>
                         
@@ -245,7 +245,7 @@
                     </div>
                 </div>
 
-                <div id="file-bride" class="transition-all duration-500 ease-in-out transform opacity-0 translate-x-10 absolute inset-0 pointer-events-none">
+                <div id="file-bride" role="tabpanel" aria-labelledby="btn-bride" class="col-start-1 row-start-1 transition-all duration-500 ease-in-out transform opacity-0 translate-x-10 pointer-events-none z-10">
                     <div class="relative group">
                         <div class="absolute inset-0 bg-gray-500/20 transform -translate-x-1 translate-y-1 md:-translate-x-1 md:translate-y-2 -rotate-1 rounded-sm z-0"></div>
                         
@@ -460,38 +460,40 @@
 
         <div class="relative z-10 max-w-5xl mx-auto px-4 md:px-6 h-full flex flex-col items-center justify-center min-h-[600px] md:min-h-[700px]">
             
-            <div id="envelope-container" class="relative cursor-pointer group transition-transform duration-300 hover:scale-105 z-20 w-full max-w-[300px] md:max-w-[500px] will-change-transform" onclick="openEnvelope()">
-                
-                <div class="relative w-full h-[200px] md:h-[340px] bg-[#f4f1ea] shadow-xl flex items-end justify-center overflow-hidden border border-gray-300 rounded-sm">
+            <div id="envelope-wrapper" class="w-full max-w-[300px] md:max-w-[500px] flex justify-center items-center">
+                <div id="envelope-container" class="relative cursor-pointer group transition-transform duration-300 hover:scale-105 z-20 w-full will-change-transform" onclick="openEnvelope()" tabindex="0" role="button" aria-label="Open Entourage Envelope">
                     
-                    <div class="absolute bottom-0 w-full h-full z-20 pointer-events-none">
-                        <div class="w-full h-full border-l-[150px] md:border-l-[250px] border-l-[#fdfbf7] border-r-[150px] md:border-r-[250px] border-r-[#fdfbf7] border-t-[100px] md:border-t-[160px] border-t-transparent filter drop-shadow-sm"></div>
+                    <div class="relative w-full h-[200px] md:h-[340px] bg-[#f4f1ea] shadow-xl flex items-end justify-center overflow-hidden border border-gray-300 rounded-sm">
+                        
+                        <div class="absolute bottom-0 w-full h-full z-20 pointer-events-none">
+                            <div class="w-full h-full border-l-[150px] md:border-l-[250px] border-l-[#fdfbf7] border-r-[150px] md:border-r-[250px] border-r-[#fdfbf7] border-t-[100px] md:border-t-[160px] border-t-transparent filter drop-shadow-sm"></div>
+                        </div>
+
+                        <div class="absolute bottom-6 md:bottom-8 z-30 text-center transition-opacity duration-200" id="envelope-label">
+                            <h3 class="font-serif text-xl md:text-3xl text-[#2c3e50] uppercase tracking-widest font-bold">Entourage List</h3>
+                            <p class="font-mono text-[9px] md:text-[10px] text-[#c5a059] uppercase tracking-[0.2em] mt-2">Classified Document</p>
+                            <p class="md:hidden text-[8px] text-red-500 uppercase tracking-widest mt-1 animate-pulse">(Tap to Open)</p>
+                        </div>
                     </div>
 
-                    <div class="absolute bottom-6 md:bottom-8 z-30 text-center transition-opacity duration-200" id="envelope-label">
-                        <h3 class="font-serif text-xl md:text-3xl text-[#2c3e50] uppercase tracking-widest font-bold">Entourage List</h3>
-                        <p class="font-mono text-[9px] md:text-[10px] text-[#c5a059] uppercase tracking-[0.2em] mt-2">Classified Document</p>
-                        <p class="md:hidden text-[8px] text-red-500 uppercase tracking-widest mt-1 animate-pulse">(Tap to Open)</p>
+                    <div id="envelope-flap" class="absolute top-0 left-0 w-full h-1/2 z-30 origin-top transition-transform duration-500 ease-in-out will-change-transform" style="transform-style: preserve-3d;">
+                        <div class="w-full h-full border-l-[150px] md:border-l-[250px] border-l-transparent border-r-[150px] md:border-r-[250px] border-r-transparent border-t-[110px] md:border-t-[170px] border-t-[#e8e6df] filter drop-shadow-md"></div>
                     </div>
-                </div>
 
-                <div id="envelope-flap" class="absolute top-0 left-0 w-full h-1/2 z-30 origin-top transition-transform duration-500 ease-in-out will-change-transform" style="transform-style: preserve-3d;">
-                    <div class="w-full h-full border-l-[150px] md:border-l-[250px] border-l-transparent border-r-[150px] md:border-r-[250px] border-r-transparent border-t-[110px] md:border-t-[170px] border-t-[#e8e6df] filter drop-shadow-md"></div>
-                </div>
-
-                <div id="wax-seal" class="absolute top-0 left-1/2 transform -translate-x-1/2 translate-y-[80px] md:translate-y-[130px] z-40 transition-all duration-300 ease-out group-hover:scale-110">
-                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-full bg-red-900 border-2 md:border-4 border-[#c5a059] shadow-lg flex items-center justify-center">
-                        <span class="font-serif text-[#c5a059] font-bold text-base md:text-xl italic">J&A</span>
+                    <div id="wax-seal" class="absolute top-0 left-1/2 transform -translate-x-1/2 translate-y-[80px] md:translate-y-[130px] z-40 transition-all duration-300 ease-out group-hover:scale-110">
+                        <div class="w-12 h-12 md:w-16 md:h-16 rounded-full bg-red-900 border-2 md:border-4 border-[#c5a059] shadow-lg flex items-center justify-center">
+                            <span class="font-serif text-[#c5a059] font-bold text-base md:text-xl italic">J&A</span>
+                        </div>
                     </div>
-                </div>
 
+                </div>
             </div>
 
-            <div id="opened-letter" class="hidden fixed inset-0 z-50 flex items-center justify-center p-2 md:p-4 bg-black/90 transition-opacity duration-300 opacity-0">
+            <div id="opened-letter" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-2 md:p-4 bg-black/90 transition-opacity duration-300 opacity-0">
                 
-                <div class="relative bg-[#fffdf5] shadow-2xl w-full max-w-4xl h-[85vh] md:h-auto md:max-h-[90vh] animate-slide-up border border-gray-200 flex flex-col rounded-sm">
+                <div class="modal-container relative bg-[#fffdf5] shadow-2xl w-full max-w-4xl h-[85vh] md:h-auto md:max-h-[90vh] animate-slide-up border border-gray-200 flex flex-col rounded-sm">
                     
-                    <div class="absolute inset-2 md:inset-4 border-2 border-[#c5a059] opacity-60 pointer-events-none z-20"></div>
+                    <div class="absolute inset-2 md:inset-4 border-2 border-[#c5a059] opacity-60 pointer-events-none z-0"></div>
 
                     <button onclick="closeEnvelope()" class="absolute top-3 right-3 md:top-6 md:right-6 z-50 text-gray-500 hover:text-red-700 transition p-2 bg-white/90 rounded-full shadow-md cursor-pointer">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -499,7 +501,7 @@
                         </svg>
                     </button>
 
-                    <div id="letter-content" class="px-6 py-12 md:px-16 md:py-20 relative z-10 overflow-y-auto custom-scrollbar flex-1 w-full">
+                    <div id="letter-content" class="px-6 pt-4 pb-4 md:px-16 md:pt-6 md:pb-8 relative z-10 overflow-y-auto custom-scrollbar flex-1 w-full">
 
                         <div id="page-1" class="block animate-fade-in">
                             <div class="text-center mb-10 md:mb-14 mt-4 md:mt-0">
